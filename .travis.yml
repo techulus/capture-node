@@ -1,0 +1,20 @@
+sudo: false
+
+language: node_js
+
+node_js:
+  - 4
+  - 6
+  - 8
+
+before_install:
+  # update NPM:
+  - npm install -g npm
+  - npm --version
+  - node --version
+
+install:
+  - npm install
+
+script:
+  - npm test

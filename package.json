@@ -1,6 +1,6 @@
 {
   "name": "capture-node",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Node Library for Capture by Techulus",
   "main": "index.js",
   "scripts": {
