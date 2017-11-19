@@ -1,0 +1,31 @@
+{
+  "name": "capture-node",
+  "version": "1.0.0",
+  "description": "Node Library for Capture by Techulus",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/techulus/capture-node.git"
+  },
+  "keywords": [
+    "screenshot",
+    "capture",
+    "node"
+  ],
+  "author": "Arjun Komath <arjunkomath@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/techulus/capture-node/issues"
+  },
+  "homepage": "https://github.com/techulus/capture-node#readme",
+  "dependencies": {
+    "md5": "^2.2.1",
+    "qs": "^6.5.1"
+  },
+  "devDependencies": {
+    "chai": "^4.1.2"
+  }
+}
