@@ -3,7 +3,7 @@
  * @author Arjun Komath <arjunkomath@gmail.com>
  *
  * Created at     : 2017-11-19 13:53:04 
- * Last modified  : 2017-11-19 13:59:17
+ * Last modified  : 2017-11-19 14:17:53
  */
 
 'use strict';
@@ -12,7 +12,7 @@ const qs = require('qs');
 const md5 = require('md5');
 const API_URL = 'https://cdn.capture.techulus.in';
 
-module.exports = function (key, secret, api_url = API_URL) {
+module.exports = function (key, secret) {
     return {
         buildImageUrl: (url, options) => {
             if (!key || !secret) {
@@ -37,7 +37,7 @@ module.exports = function (key, secret, api_url = API_URL) {
                 query = toQueryString(options);
             }
             const token = generateToken(secret, query);
-            return `${api_url}/${key}/${token}/image?${query}`;
+            return `${API_URL}/${key}/${token}/image?${query}`;
         },
         buildPdfUrl: (url, options) => {
             if (!key || !secret) {
@@ -62,7 +62,7 @@ module.exports = function (key, secret, api_url = API_URL) {
                 query = toQueryString(options);
             }
             const token = generateToken(secret, query);
-            return `${api_url}/${key}/${token}/pdf?${query}`;
+            return `${API_URL}/${key}/${token}/pdf?${query}`;
         }
     }
 };
