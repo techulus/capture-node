@@ -10,6 +10,7 @@ node_js:
 before_install:
   # update NPM:
   - npm install -g npm
+  - npm install -g mocha
   - npm --version
   - node --version
 
