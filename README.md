@@ -31,8 +31,6 @@ var url = capture.buildImageUrl('https://capture.techulus.in/', {
 ```
 Now stick that url in an img tag to render the screenshot!
 
-<img src="https://cdn.capture.techulus.in/e1ab7054-dabc-48d6-a33f-c18038aac1c8/e0c64ecf2dcf45954792d3cb574fad41/image?url=https://capture.techulus.in/&delay=3"/>
-
 ### PDF
 
 ```javascript
