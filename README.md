@@ -13,7 +13,7 @@ npm install capture-node
 
 ## Usage
 
-List of all capture options: https://capture.techulus.in/docs
+List of all capture options: https://docs.capture.techulus.in
 
 ### Image
 
