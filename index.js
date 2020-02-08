@@ -3,7 +3,7 @@
  * @author Arjun Komath <arjunkomath@gmail.com>
  *
  * Created at     : 2017-11-19 13:53:04 
- * Last modified  : 2017-11-19 14:17:53
+ * Last modified  : 2020-02-08 18:01:04
  */
 
 'use strict';
@@ -63,6 +63,31 @@ module.exports = function (key, secret) {
             }
             const token = generateToken(secret, query);
             return `${API_URL}/${key}/${token}/pdf?${query}`;
+        },
+        buildContentUrl: (url, options) => {
+            if (!key || !secret) {
+                throw new Error('Key and Secret is required');
+            }
+            if (typeof url !== 'string') {
+                throw new Error('url should be of type string (something like www.google.com)');
+            }
+            if (url === null) {
+                throw new Error('url is required');
+            }
+            let query = '';
+            if (options) {
+                options = Object.assign({}, options, {
+                    url: url
+                });
+                query = toQueryString(options);
+            } else {
+                options = {
+                    url: url
+                };
+                query = toQueryString(options);
+            }
+            const token = generateToken(secret, query);
+            return `${API_URL}/${key}/${token}/content?${query}`;
         }
     }
 };
