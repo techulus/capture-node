@@ -1,8 +1,6 @@
 # Capture Node SDK
 Node Library for Capture by Techulus
 
-[![Build Status](https://travis-ci.org/techulus/capture-node.svg?branch=master)](https://travis-ci.org/techulus/capture-node)
-
 Get your API Key and Secret from https://capture.techulus.in/console
 
 ## Installation
