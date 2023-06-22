@@ -1,4 +1,4 @@
-import { Capture } from "../src";
+import { Capture } from "../dist";
 
 const capture = new Capture("test", "test");
 
