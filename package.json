@@ -1,6 +1,6 @@
 {
   "name": "capture-node",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Node Library for Capture by Techulus",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
