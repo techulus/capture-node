@@ -45,4 +45,18 @@ var url = capture.buildPdfUrl('https://capture.techulus.in/', {
     t: Date.now()
 });
 ```
-Now open the url to see the PDF!
+
+### Content
+
+```javascript
+var Capture = require('capture-node');
+var capture = Capture(YOUR_API_KEY, YOUR_API_SECRET);
+
+// var url = capture.buildContentUrl(URL_TO_CAPTURE, CAPTURE_OPTIONS);
+
+var url = capture.buildContentUrl('https://capture.techulus.in/', {
+    full: true,
+    delay: 3,
+    t: Date.now()
+});
+```
