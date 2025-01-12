@@ -1,6 +1,6 @@
 {
   "name": "capture-node",
-  "version": "2.0.1",
+  "version": "2.1.0",
   "description": "Node Library for Capture by Techulus",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -32,12 +32,12 @@
   "devDependencies": {
     "@babel/preset-env": "^7.22.5",
     "@babel/preset-typescript": "^7.22.5",
+    "@biomejs/biome": "^1.9.4",
     "@types/jest": "^29.5.2",
     "@types/md5": "^2.3.2",
     "@types/node": "^20.3.1",
     "@types/qs": "^6.9.7",
     "jest": "^29.5.0",
-    "prettier": "^2.8.8",
     "typescript": "^5.1.3"
   }
 }
