@@ -26,6 +26,14 @@ const url = capture.buildImageUrl('https://capture.techulus.in/', {
     delay: 3,
     t: Date.now()
 });
+
+// or
+
+const image = await capture.fetchImage('https://capture.techulus.in/', {
+    full: true,
+    delay: 3,
+    t: Date.now()
+});
 ```
 Now stick that url in an img tag to render the screenshot!
 
@@ -42,6 +50,14 @@ const url = capture.buildPdfUrl('https://capture.techulus.in/', {
     delay: 3,
     t: Date.now()
 });
+
+// or
+
+const pdf = capture.fetchPdf('https://capture.techulus.in/', {
+    full: true,
+    delay: 3,
+    t: Date.now()
+});
 ```
 
 ### Content
@@ -53,6 +69,10 @@ const capture = new Capture(YOUR_API_KEY, YOUR_API_SECRET);
 // var url = capture.buildContentUrl(URL_TO_CAPTURE, CAPTURE_OPTIONS);
 
 const url = capture.buildContentUrl('https://capture.techulus.in/');
+ 
+// or
+
+const content = await capture.fetchContent('https://capture.techulus.in/');
 ```
 
 ### Metadata
@@ -64,4 +84,8 @@ const capture = new Capture(YOUR_API_KEY, YOUR_API_SECRET);
 // var url = capture.buildMetadataUrl(URL_TO_CAPTURE, CAPTURE_OPTIONS);
 
 const url = capture.buildMetadataUrl('https://capture.techulus.in/');
+ 
+// or
+
+const content = await capture.fetchMetadata('https://capture.techulus.in/');
 ```
