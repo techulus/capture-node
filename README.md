@@ -2,7 +2,9 @@
 
 Node Library for [capture.page](https://capture.page)
 
-Get your API Key and Secret from https://capture.page/console
+Get your API Key and Secret from [https://capture.page/console](https://capture.page/console)
+
+List of all capture options: [https://docs.capture.page](https://docs.capture.page)
 
 ## Installation
 
@@ -19,6 +21,8 @@ List of all capture options: https://docs.capture.page
 ```javascript
 import { Capture } from 'capture-node';
 const capture = new Capture(YOUR_API_KEY, YOUR_API_SECRET);
+// or initialize with edge endpoint
+// const capture = new Capture(YOUR_API_KEY, YOUR_API_SECRET, { useEdge: true });
 
 // var url = capture.buildImageUrl(URL_TO_CAPTURE, CAPTURE_OPTIONS);
 
