@@ -1,7 +1,8 @@
 # Capture Node SDK
-Node Library for Capture by Techulus
 
-Get your API Key and Secret from https://capture.techulus.in/console
+Node Library for [capture.page](https://capture.page)
+
+Get your API Key and Secret from https://capture.page/console
 
 ## Installation
 
@@ -11,7 +12,7 @@ npm install capture-node
 
 ## Usage
 
-List of all capture options: https://docs.capture.techulus.in
+List of all capture options: https://docs.capture.page
 
 ### Image
 
@@ -21,7 +22,7 @@ const capture = new Capture(YOUR_API_KEY, YOUR_API_SECRET);
 
 // var url = capture.buildImageUrl(URL_TO_CAPTURE, CAPTURE_OPTIONS);
 
-const url = capture.buildImageUrl('https://capture.techulus.in/', {
+const url = capture.buildImageUrl('https://capture.page/', {
     full: true,
     delay: 3,
     t: Date.now()
@@ -29,7 +30,7 @@ const url = capture.buildImageUrl('https://capture.techulus.in/', {
 
 // or
 
-const image = await capture.fetchImage('https://capture.techulus.in/', {
+const image = await capture.fetchImage('https://capture.page/', {
     full: true,
     delay: 3,
     t: Date.now()
@@ -45,7 +46,7 @@ const capture = new Capture(YOUR_API_KEY, YOUR_API_SECRET);
 
 // var url = capture.buildPdfUrl(URL_TO_CAPTURE, CAPTURE_OPTIONS);
 
-const url = capture.buildPdfUrl('https://capture.techulus.in/', {
+const url = capture.buildPdfUrl('https://capture.page/', {
     full: true,
     delay: 3,
     t: Date.now()
@@ -53,7 +54,7 @@ const url = capture.buildPdfUrl('https://capture.techulus.in/', {
 
 // or
 
-const pdf = capture.fetchPdf('https://capture.techulus.in/', {
+const pdf = capture.fetchPdf('https://capture.page/', {
     full: true,
     delay: 3,
     t: Date.now()
@@ -68,11 +69,11 @@ const capture = new Capture(YOUR_API_KEY, YOUR_API_SECRET);
 
 // var url = capture.buildContentUrl(URL_TO_CAPTURE, CAPTURE_OPTIONS);
 
-const url = capture.buildContentUrl('https://capture.techulus.in/');
+const url = capture.buildContentUrl('https://capture.page/');
  
 // or
 
-const content = await capture.fetchContent('https://capture.techulus.in/');
+const content = await capture.fetchContent('https://capture.page/');
 ```
 
 ### Metadata
@@ -83,9 +84,9 @@ const capture = new Capture(YOUR_API_KEY, YOUR_API_SECRET);
 
 // var url = capture.buildMetadataUrl(URL_TO_CAPTURE, CAPTURE_OPTIONS);
 
-const url = capture.buildMetadataUrl('https://capture.techulus.in/');
+const url = capture.buildMetadataUrl('https://capture.page/');
  
 // or
 
-const content = await capture.fetchMetadata('https://capture.techulus.in/');
+const content = await capture.fetchMetadata('https://capture.page/');
 ```

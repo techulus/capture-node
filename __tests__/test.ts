@@ -13,17 +13,17 @@ describe("Capture URL Builder", () => {
 			const url = capture.buildImageUrl("https://news.ycombinator.com/");
 			console.log(url);
 			expect(url).toBe(
-				"https://cdn.capture.techulus.in/test/f37d5fb3ee4540a05bf4ffeed6dffa28/image?url=https%3A%2F%2Fnews.ycombinator.com%2F",
+				"https://cdn.capture.page/test/f37d5fb3ee4540a05bf4ffeed6dffa28/image?url=https%3A%2F%2Fnews.ycombinator.com%2F",
 			);
 		});
 
 		it("buildImageUrl with options should return valid url", () => {
-			const url = capture.buildImageUrl("https://capture.techulus.in/", {
+			const url = capture.buildImageUrl("https://capture.page/", {
 				full: true,
 				delay: 3,
 			});
 			expect(url).toBe(
-				"https://cdn.capture.techulus.in/test/2cb8b7ed9dbdb5c0db4a5dc4523a0780/image?full=true&delay=3&url=https%3A%2F%2Fcapture.techulus.in%2F",
+				"https://cdn.capture.page/test/0e944abb6d823d0c8618dc22e508be6d/image?full=true&delay=3&url=https%3A%2F%2Fcapture.page%2F",
 			);
 		});
 	});
@@ -37,17 +37,17 @@ describe("Capture URL Builder", () => {
 		it("buildPdfUrl should return valid url", () => {
 			const url = capture.buildPdfUrl("https://news.ycombinator.com/");
 			expect(url).toBe(
-				"https://cdn.capture.techulus.in/test/f37d5fb3ee4540a05bf4ffeed6dffa28/pdf?url=https%3A%2F%2Fnews.ycombinator.com%2F",
+				"https://cdn.capture.page/test/f37d5fb3ee4540a05bf4ffeed6dffa28/pdf?url=https%3A%2F%2Fnews.ycombinator.com%2F",
 			);
 		});
 
 		it("buildPdfUrl with options should return valid url", () => {
-			const url = capture.buildPdfUrl("https://capture.techulus.in/", {
+			const url = capture.buildPdfUrl("https://capture.page/", {
 				full: true,
 				delay: 3,
 			});
 			expect(url).toBe(
-				"https://cdn.capture.techulus.in/test/2cb8b7ed9dbdb5c0db4a5dc4523a0780/pdf?full=true&delay=3&url=https%3A%2F%2Fcapture.techulus.in%2F",
+				"https://cdn.capture.page/test/0e944abb6d823d0c8618dc22e508be6d/pdf?full=true&delay=3&url=https%3A%2F%2Fcapture.page%2F",
 			);
 		});
 	});
@@ -61,7 +61,7 @@ describe("Capture URL Builder", () => {
 		it("buildContentUrl should return valid url", () => {
 			const url = capture.buildContentUrl("https://news.ycombinator.com/");
 			expect(url).toBe(
-				"https://cdn.capture.techulus.in/test/f37d5fb3ee4540a05bf4ffeed6dffa28/content?url=https%3A%2F%2Fnews.ycombinator.com%2F",
+				"https://cdn.capture.page/test/f37d5fb3ee4540a05bf4ffeed6dffa28/content?url=https%3A%2F%2Fnews.ycombinator.com%2F",
 			);
 		});
 	});
@@ -75,8 +75,32 @@ describe("Capture URL Builder", () => {
 		it("buildMetadataUrl should return valid url", () => {
 			const url = capture.buildMetadataUrl("https://news.ycombinator.com/");
 			expect(url).toBe(
-				"https://cdn.capture.techulus.in/test/f37d5fb3ee4540a05bf4ffeed6dffa28/metadata?url=https%3A%2F%2Fnews.ycombinator.com%2F",
+				"https://cdn.capture.page/test/f37d5fb3ee4540a05bf4ffeed6dffa28/metadata?url=https%3A%2F%2Fnews.ycombinator.com%2F",
 			);
 		});
+	});
+});
+
+describe("Capture URL Builder with useEdge", () => {
+	const edgeCapture = new Capture("test", "test", { useEdge: true });
+
+	it("buildImageUrl should use edge URL", () => {
+		const url = edgeCapture.buildImageUrl("https://news.ycombinator.com/");
+		expect(url.startsWith("https://edge.capture.page/")).toBe(true);
+	});
+
+	it("buildPdfUrl should use edge URL", () => {
+		const url = edgeCapture.buildPdfUrl("https://news.ycombinator.com/");
+		expect(url.startsWith("https://edge.capture.page/")).toBe(true);
+	});
+
+	it("buildContentUrl should use edge URL", () => {
+		const url = edgeCapture.buildContentUrl("https://news.ycombinator.com/");
+		expect(url.startsWith("https://edge.capture.page/")).toBe(true);
+	});
+
+	it("buildMetadataUrl should use edge URL", () => {
+		const url = edgeCapture.buildMetadataUrl("https://news.ycombinator.com/");
+		expect(url.startsWith("https://edge.capture.page/")).toBe(true);
 	});
 });

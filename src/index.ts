@@ -5,14 +5,17 @@ export type RequestType = "image" | "pdf" | "content" | "metadata";
 export type RequestOptions = Record<string, string | number | boolean>;
 
 export class Capture {
-	static API_URL = "https://cdn.capture.techulus.in";
+	static API_URL = "https://cdn.capture.page";
+	static EDGE_URL = "https://edge.capture.page";
 
 	key: string;
 	secret: string;
+	options: { useEdge?: boolean };
 
-	constructor(key: string, secret: string) {
+	constructor(key: string, secret: string, options?: { useEdge?: boolean }) {
 		this.key = key;
 		this.secret = secret;
+		this.options = options ?? { useEdge: false };
 	}
 
 	private _generateToken(secret: string, url: string) {
@@ -74,7 +77,7 @@ export class Capture {
 			query = this._toQueryString(options);
 		}
 		const token = this._generateToken(this.secret, query);
-		return `${Capture.API_URL}/${this.key}/${token}/${type}?${query}`;
+		return `${this.options.useEdge ? Capture.EDGE_URL : Capture.API_URL}/${this.key}/${token}/${type}?${query}`;
 	}
 
 	buildImageUrl(url: string, options?: RequestOptions) {
