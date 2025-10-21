@@ -1,4 +1,5 @@
 import { Capture } from "../dist";
+import { describe, it, expect } from "vitest";
 
 const capture = new Capture("test", "test");
 
@@ -79,6 +80,29 @@ describe("Capture URL Builder", () => {
 			);
 		});
 	});
+
+	describe("Animated Requests", () => {
+		it("should be an object", () => {
+			expect(capture).toHaveProperty("buildAnimatedUrl");
+			expect(capture.buildAnimatedUrl).toBeInstanceOf(Function);
+		});
+
+		it("buildAnimatedUrl should return valid url", () => {
+			const url = capture.buildAnimatedUrl("https://news.ycombinator.com/");
+			expect(url).toBe(
+				"https://cdn.capture.page/test/f37d5fb3ee4540a05bf4ffeed6dffa28/animated?url=https%3A%2F%2Fnews.ycombinator.com%2F",
+			);
+		});
+
+		it("buildAnimatedUrl with options should return valid url", () => {
+			const url = capture.buildAnimatedUrl("https://capture.page/", {
+				delay: 3,
+			});
+			expect(url).toBe(
+				"https://cdn.capture.page/test/27e77d8cd67d43e3a490a926c53a4516/animated?delay=3&url=https%3A%2F%2Fcapture.page%2F",
+			);
+		});
+	});
 });
 
 describe("Capture URL Builder with useEdge", () => {
@@ -101,6 +125,11 @@ describe("Capture URL Builder with useEdge", () => {
 
 	it("buildMetadataUrl should use edge URL", () => {
 		const url = edgeCapture.buildMetadataUrl("https://news.ycombinator.com/");
+		expect(url.startsWith("https://edge.capture.page/")).toBe(true);
+	});
+
+	it("buildAnimatedUrl should use edge URL", () => {
+		const url = edgeCapture.buildAnimatedUrl("https://news.ycombinator.com/");
 		expect(url.startsWith("https://edge.capture.page/")).toBe(true);
 	});
 });

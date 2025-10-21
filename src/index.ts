@@ -1,7 +1,7 @@
 import md5 from "md5";
 import qs from "qs";
 
-export type RequestType = "image" | "pdf" | "content" | "metadata";
+export type RequestType = "image" | "pdf" | "content" | "metadata" | "animated";
 export type RequestOptions = Record<string, string | number | boolean>;
 
 export class Capture {
@@ -96,6 +96,10 @@ export class Capture {
 		return this._buildUrl("metadata", url, options);
 	}
 
+	buildAnimatedUrl(url: string, options?: RequestOptions) {
+		return this._buildUrl("animated", url, options);
+	}
+
 	async fetchImage(
 		url: string,
 		options?: RequestOptions,
@@ -126,5 +130,14 @@ export class Capture {
 		metadata: Record<string, string | number>;
 	}> {
 		return fetch(this.buildMetadataUrl(url, options)).then((res) => res.json());
+	}
+
+	async fetchAnimated(
+		url: string,
+		options?: RequestOptions,
+	): Promise<ArrayBuffer> {
+		return fetch(this.buildAnimatedUrl(url, options)).then((res) =>
+			res.arrayBuffer(),
+		);
 	}
 }
