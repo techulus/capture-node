@@ -80,23 +80,23 @@ export class Capture {
 		return `${this.options.useEdge ? Capture.EDGE_URL : Capture.API_URL}/${this.key}/${token}/${type}?${query}`;
 	}
 
-	buildImageUrl(url: string, options?: RequestOptions) {
+	buildImageUrl(url: string, options?: RequestOptions): string {
 		return this._buildUrl("image", url, options);
 	}
 
-	buildPdfUrl(url: string, options?: RequestOptions) {
+	buildPdfUrl(url: string, options?: RequestOptions): string {
 		return this._buildUrl("pdf", url, options);
 	}
 
-	buildContentUrl(url: string, options?: RequestOptions) {
+	buildContentUrl(url: string, options?: RequestOptions): string {
 		return this._buildUrl("content", url, options);
 	}
 
-	buildMetadataUrl(url: string, options?: RequestOptions) {
+	buildMetadataUrl(url: string, options?: RequestOptions): string {
 		return this._buildUrl("metadata", url, options);
 	}
 
-	buildAnimatedUrl(url: string, options?: RequestOptions) {
+	buildAnimatedUrl(url: string, options?: RequestOptions): string {
 		return this._buildUrl("animated", url, options);
 	}
 
