@@ -12,7 +12,6 @@ describe("Capture URL Builder", () => {
 
 		it("buildImageUrl should return valid url", () => {
 			const url = capture.buildImageUrl("https://news.ycombinator.com/");
-			console.log(url);
 			expect(url).toBe(
 				"https://cdn.capture.page/test/f37d5fb3ee4540a05bf4ffeed6dffa28/image?url=https%3A%2F%2Fnews.ycombinator.com%2F",
 			);

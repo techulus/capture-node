@@ -94,7 +94,9 @@ export class Capture {
 			query = this._toQueryString(options);
 		}
 		const token = this._generateToken(this.secret, query);
-		return `${this.options.useEdge ? Capture.EDGE_URL : Capture.API_URL}/${this.key}/${token}/${type}?${query}`;
+		return `${this.options.useEdge ? Capture.EDGE_URL : Capture.API_URL}/${
+			this.key
+		}/${token}/${type}?${query}`;
 	}
 
 	/**
@@ -191,7 +193,12 @@ export class Capture {
 	async fetchContent(
 		url: string,
 		options?: RequestOptions,
-	): Promise<{ success: boolean; html: string; textContent: string }> {
+	): Promise<{
+		success: boolean;
+		html: string;
+		textContent: string;
+		markdown: string;
+	}> {
 		return fetch(this.buildContentUrl(url, options)).then((res) => res.json());
 	}
 
