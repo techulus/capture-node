@@ -1,5 +1,4 @@
-import md5 from "md5";
-import qs from "qs";
+import { createHash } from "node:crypto";
 
 /**
  * The type of capture request to perform.
@@ -36,31 +35,27 @@ export class Capture {
 	}
 
 	private _generateToken(secret: string, url: string) {
-		return md5(secret + url);
+		return createHash("md5")
+			.update(secret + url)
+			.digest("hex");
 	}
 
 	private _toQueryString(options: RequestOptions) {
-		const filterFunc = (key: string, value: string | number) => {
+		const params = new URLSearchParams();
+
+		for (const [key, value] of Object.entries(options)) {
 			if (key === "format") {
-				return;
+				continue;
 			}
+
 			if (!value) {
-				return;
+				continue;
 			}
-			return value;
-		};
 
-		const fixedEncodeURIComponent = (str: string) =>
-			encodeURIComponent(str).replace(
-				/[!'()*]/g,
-				(c) => `%${c.charCodeAt(0).toString(16)}`,
-			);
+			params.append(key, String(value));
+		}
 
-		return qs.stringify(options, {
-			encoder: fixedEncodeURIComponent,
-			filter: filterFunc,
-			arrayFormat: "repeat",
-		});
+		return params.toString();
 	}
 
 	private _buildUrl(
