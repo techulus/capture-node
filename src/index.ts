@@ -44,10 +44,6 @@ export class Capture {
 		const params = new URLSearchParams();
 
 		for (const [key, value] of Object.entries(options)) {
-			if (key === "format") {
-				continue;
-			}
-
 			if (!value) {
 				continue;
 			}
