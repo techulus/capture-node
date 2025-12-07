@@ -104,6 +104,72 @@ describe("Capture URL Builder", () => {
 	});
 });
 
+describe("Falsy Value Handling", () => {
+	it("should preserve zero values in query parameters", () => {
+		const url = capture.buildImageUrl("https://capture.page/", {
+			delay: 0,
+			top: 0,
+			left: 0,
+		});
+
+		expect(url).toContain("delay=0");
+		expect(url).toContain("top=0");
+		expect(url).toContain("left=0");
+	});
+
+	it("should preserve false boolean values in query parameters", () => {
+		const url = capture.buildImageUrl("https://capture.page/", {
+			full: false,
+			darkMode: false,
+			blockCookieBanners: false,
+		});
+
+		expect(url).toContain("full=false");
+		expect(url).toContain("darkMode=false");
+		expect(url).toContain("blockCookieBanners=false");
+	});
+
+	it("should exclude undefined values from query parameters", () => {
+		const url = capture.buildImageUrl("https://capture.page/", {
+			delay: undefined,
+			full: undefined,
+			vw: 1440,
+		});
+
+		expect(url).not.toContain("delay=");
+		expect(url).not.toContain("full=");
+		expect(url).toContain("vw=1440");
+	});
+
+	it("should exclude null values from query parameters", () => {
+		const url = capture.buildImageUrl("https://capture.page/", {
+			delay: null as any,
+			full: null as any,
+			vw: 1440,
+		});
+
+		expect(url).not.toContain("delay=");
+		expect(url).not.toContain("full=");
+		expect(url).toContain("vw=1440");
+	});
+
+	it("should handle mixed falsy and truthy values correctly", () => {
+		const url = capture.buildImageUrl("https://capture.page/", {
+			delay: 0,
+			full: false,
+			vw: 1440,
+			darkMode: true,
+			waitFor: undefined,
+		});
+
+		expect(url).toContain("delay=0");
+		expect(url).toContain("full=false");
+		expect(url).toContain("vw=1440");
+		expect(url).toContain("darkMode=true");
+		expect(url).not.toContain("waitFor=");
+	});
+});
+
 describe("Capture URL Builder with useEdge", () => {
 	const edgeCapture = new Capture("test", "test", { useEdge: true });
 
