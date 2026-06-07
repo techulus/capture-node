@@ -1,5 +1,5 @@
-import { Capture, CaptureSessionsError } from "../dist";
 import { afterEach, describe, expect, it, vi } from "vitest";
+import { Capture, type CaptureSessionsError } from "../dist";
 
 const capture = new Capture("test", "test");
 
@@ -216,7 +216,7 @@ describe("Sessions API", () => {
 		} as Response);
 		const client = new Capture("user_123", "secret");
 
-		const response = await client.createSession({
+		const response = await client.sessions.create({
 			maxTtlSeconds: 300,
 			proxy: true,
 		});
@@ -246,8 +246,8 @@ describe("Sessions API", () => {
 		} as Response);
 		const client = new Capture("user_123", "secret");
 
-		await client.getSession("sess_123");
-		await client.closeSession("sess_123");
+		await client.sessions.get("sess_123");
+		await client.sessions.close("sess_123");
 
 		expect(fetchMock).toHaveBeenNthCalledWith(
 			1,
@@ -275,7 +275,7 @@ describe("Sessions API", () => {
 		} as Response);
 		const client = new Capture("user_123", "secret");
 
-		await client.executeAction("sess_123", "goto", {
+		await client.sessions.action("sess_123", "goto", {
 			url: "https://example.com",
 		});
 
@@ -303,7 +303,7 @@ describe("Sessions API", () => {
 		} as Response);
 		const client = new Capture("user_123", "secret");
 
-		await expect(client.getSession("missing")).rejects.toMatchObject({
+		await expect(client.sessions.get("missing")).rejects.toMatchObject({
 			name: "CaptureSessionsError",
 			status: 404,
 			body: { success: false, error: "Session not found" },

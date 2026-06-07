@@ -19,6 +19,17 @@ export type SessionOptions = {
 export type ActionPayload = Record<string, unknown>;
 export type SessionResponse = Record<string, unknown>;
 
+export type SessionsAPI = {
+	create: (options?: SessionOptions) => Promise<SessionResponse>;
+	get: (sessionId: string) => Promise<SessionResponse>;
+	close: (sessionId: string) => Promise<SessionResponse>;
+	action: (
+		sessionId: string,
+		type: string,
+		payload?: ActionPayload,
+	) => Promise<SessionResponse>;
+};
+
 export class CaptureSessionsError extends Error {
 	status: number;
 	body: unknown;
@@ -48,6 +59,7 @@ export class Capture {
 	key: string;
 	secret: string;
 	options: { useEdge?: boolean };
+	sessions: SessionsAPI;
 
 	/**
 	 * Creates a new Capture instance.
@@ -56,14 +68,24 @@ export class Capture {
 	 * @param secret - Your Capture.page API secret
 	 * @param options - Optional configuration
 	 */
-	constructor(
-		key: string,
-		secret: string,
-		options?: { useEdge?: boolean },
-	) {
+	constructor(key: string, secret: string, options?: { useEdge?: boolean }) {
 		this.key = key;
 		this.secret = secret;
 		this.options = options ?? { useEdge: false };
+		this.sessions = {
+			create: (sessionOptions?: SessionOptions) =>
+				this._sessionsRequest("", "POST", sessionOptions ?? {}),
+			get: (sessionId: string) =>
+				this._sessionsRequest(`/${encodeURIComponent(sessionId)}`, "GET"),
+			close: (sessionId: string) =>
+				this._sessionsRequest(`/${encodeURIComponent(sessionId)}`, "DELETE"),
+			action: (sessionId: string, type: string, payload?: ActionPayload) =>
+				this._sessionsRequest(
+					`/${encodeURIComponent(sessionId)}/actions`,
+					"POST",
+					{ type, payload: payload ?? {} },
+				),
+		};
 	}
 
 	private _generateToken(secret: string, url: string) {
@@ -295,33 +317,6 @@ export class Capture {
 	): Promise<ArrayBuffer> {
 		return fetch(this.buildAnimatedUrl(url, options)).then((res) =>
 			res.arrayBuffer(),
-		);
-	}
-
-	async createSession(options?: SessionOptions): Promise<SessionResponse> {
-		return this._sessionsRequest("", "POST", options ?? {});
-	}
-
-	async getSession(sessionId: string): Promise<SessionResponse> {
-		return this._sessionsRequest(`/${encodeURIComponent(sessionId)}`, "GET");
-	}
-
-	async closeSession(sessionId: string): Promise<SessionResponse> {
-		return this._sessionsRequest(
-			`/${encodeURIComponent(sessionId)}`,
-			"DELETE",
-		);
-	}
-
-	async executeAction(
-		sessionId: string,
-		type: string,
-		payload?: ActionPayload,
-	): Promise<SessionResponse> {
-		return this._sessionsRequest(
-			`/${encodeURIComponent(sessionId)}/actions`,
-			"POST",
-			{ type, payload: payload ?? {} },
 		);
 	}
 }

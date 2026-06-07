@@ -102,14 +102,14 @@ import { Capture } from 'capture-node';
 
 const capture = new Capture(YOUR_API_KEY, YOUR_API_SECRET);
 
-const created = await capture.createSession({ maxTtlSeconds: 300 });
+const created = await capture.sessions.create({ maxTtlSeconds: 300 });
 const sessionId = created.session.id;
 
-await capture.executeAction(sessionId, 'goto', { url: 'https://example.com' });
+await capture.sessions.action(sessionId, 'goto', { url: 'https://example.com' });
 
-const screenshot = await capture.executeAction(sessionId, 'screenshot', {
+const screenshot = await capture.sessions.action(sessionId, 'screenshot', {
     fullPage: true
 });
 
-await capture.closeSession(sessionId);
+await capture.sessions.close(sessionId);
 ```
