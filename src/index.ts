@@ -10,6 +10,34 @@ export type RequestType = "image" | "pdf" | "content" | "metadata" | "animated";
  */
 export type RequestOptions = Record<string, string | number | boolean>;
 
+export type SessionOptions = {
+	maxTtlSeconds?: number;
+	proxy?: boolean;
+	bypassBotDetection?: boolean;
+};
+
+export type ActionPayload = Record<string, unknown>;
+export type SessionResponse = Record<string, unknown>;
+
+export class CaptureSessionsError extends Error {
+	status: number;
+	body: unknown;
+
+	constructor(status: number, body: unknown) {
+		const message =
+			typeof body === "object" &&
+			body !== null &&
+			"error" in body &&
+			typeof body.error === "string"
+				? body.error
+				: `Capture Sessions API request failed with status ${status}`;
+		super(message);
+		this.name = "CaptureSessionsError";
+		this.status = status;
+		this.body = body;
+	}
+}
+
 /**
  * Main class for interacting with the Capture.page API.
  */
@@ -28,7 +56,11 @@ export class Capture {
 	 * @param secret - Your Capture.page API secret
 	 * @param options - Optional configuration
 	 */
-	constructor(key: string, secret: string, options?: { useEdge?: boolean }) {
+	constructor(
+		key: string,
+		secret: string,
+		options?: { useEdge?: boolean },
+	) {
 		this.key = key;
 		this.secret = secret;
 		this.options = options ?? { useEdge: false };
@@ -88,6 +120,46 @@ export class Capture {
 		return `${this.options.useEdge ? Capture.EDGE_URL : Capture.API_URL}/${
 			this.key
 		}/${token}/${type}?${query}`;
+	}
+
+	private _sessionsBearerToken() {
+		if (!this.key || !this.secret) {
+			throw new Error("Key and Secret is required");
+		}
+
+		return Buffer.from(`${this.key}:${this.secret}`, "utf-8").toString(
+			"base64",
+		);
+	}
+
+	private _sessionUrl(path = "") {
+		const baseUrl = Capture.EDGE_URL.replace(/\/+$/, "");
+		return `${baseUrl}/v1/sessions${path}`;
+	}
+
+	private async _sessionsRequest(
+		path: string,
+		method: "GET" | "POST" | "DELETE",
+		body?: Record<string, unknown>,
+	): Promise<SessionResponse> {
+		const headers: Record<string, string> = {
+			Authorization: `Bearer ${this._sessionsBearerToken()}`,
+		};
+		const init: RequestInit = { method, headers };
+
+		if (body !== undefined) {
+			headers["Content-Type"] = "application/json";
+			init.body = JSON.stringify(body);
+		}
+
+		const response = await fetch(this._sessionUrl(path), init);
+		const responseBody = await response.json().catch(() => ({}));
+
+		if (!response.ok) {
+			throw new CaptureSessionsError(response.status, responseBody);
+		}
+
+		return responseBody;
 	}
 
 	/**
@@ -223,6 +295,33 @@ export class Capture {
 	): Promise<ArrayBuffer> {
 		return fetch(this.buildAnimatedUrl(url, options)).then((res) =>
 			res.arrayBuffer(),
+		);
+	}
+
+	async createSession(options?: SessionOptions): Promise<SessionResponse> {
+		return this._sessionsRequest("", "POST", options ?? {});
+	}
+
+	async getSession(sessionId: string): Promise<SessionResponse> {
+		return this._sessionsRequest(`/${encodeURIComponent(sessionId)}`, "GET");
+	}
+
+	async closeSession(sessionId: string): Promise<SessionResponse> {
+		return this._sessionsRequest(
+			`/${encodeURIComponent(sessionId)}`,
+			"DELETE",
+		);
+	}
+
+	async executeAction(
+		sessionId: string,
+		type: string,
+		payload?: ActionPayload,
+	): Promise<SessionResponse> {
+		return this._sessionsRequest(
+			`/${encodeURIComponent(sessionId)}/actions`,
+			"POST",
+			{ type, payload: payload ?? {} },
 		);
 	}
 }

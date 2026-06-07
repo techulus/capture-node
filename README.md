@@ -94,3 +94,22 @@ const url = capture.buildMetadataUrl('https://capture.page/');
 
 const content = await capture.fetchMetadata('https://capture.page/');
 ```
+
+### Sessions
+
+```javascript
+import { Capture } from 'capture-node';
+
+const capture = new Capture(YOUR_API_KEY, YOUR_API_SECRET);
+
+const created = await capture.createSession({ maxTtlSeconds: 300 });
+const sessionId = created.session.id;
+
+await capture.executeAction(sessionId, 'goto', { url: 'https://example.com' });
+
+const screenshot = await capture.executeAction(sessionId, 'screenshot', {
+    fullPage: true
+});
+
+await capture.closeSession(sessionId);
+```

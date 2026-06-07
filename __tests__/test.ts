@@ -1,5 +1,5 @@
-import { Capture } from "../dist";
-import { describe, it, expect } from "vitest";
+import { Capture, CaptureSessionsError } from "../dist";
+import { afterEach, describe, expect, it, vi } from "vitest";
 
 const capture = new Capture("test", "test");
 
@@ -196,5 +196,117 @@ describe("Capture URL Builder with useEdge", () => {
 	it("buildAnimatedUrl should use edge URL", () => {
 		const url = edgeCapture.buildAnimatedUrl("https://news.ycombinator.com/");
 		expect(url.startsWith("https://edge.capture.page/")).toBe(true);
+	});
+});
+
+describe("Sessions API", () => {
+	afterEach(() => {
+		vi.restoreAllMocks();
+		Capture.EDGE_URL = "https://edge.capture.page";
+	});
+
+	it("creates a session with bearer auth and JSON body", async () => {
+		const fetchMock = vi.spyOn(globalThis, "fetch").mockResolvedValue({
+			ok: true,
+			status: 201,
+			json: async () => ({
+				success: true,
+				session: { id: "sess_123", status: "active" },
+			}),
+		} as Response);
+		const client = new Capture("user_123", "secret");
+
+		const response = await client.createSession({
+			maxTtlSeconds: 300,
+			proxy: true,
+		});
+
+		expect(response).toEqual({
+			success: true,
+			session: { id: "sess_123", status: "active" },
+		});
+		expect(fetchMock).toHaveBeenCalledWith(
+			"https://edge.capture.page/v1/sessions",
+			{
+				method: "POST",
+				headers: {
+					Authorization: "Bearer dXNlcl8xMjM6c2VjcmV0",
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({ maxTtlSeconds: 300, proxy: true }),
+			},
+		);
+	});
+
+	it("gets and closes sessions", async () => {
+		const fetchMock = vi.spyOn(globalThis, "fetch").mockResolvedValue({
+			ok: true,
+			status: 200,
+			json: async () => ({ success: true, session: { id: "sess_123" } }),
+		} as Response);
+		const client = new Capture("user_123", "secret");
+
+		await client.getSession("sess_123");
+		await client.closeSession("sess_123");
+
+		expect(fetchMock).toHaveBeenNthCalledWith(
+			1,
+			"https://edge.capture.page/v1/sessions/sess_123",
+			{
+				method: "GET",
+				headers: { Authorization: "Bearer dXNlcl8xMjM6c2VjcmV0" },
+			},
+		);
+		expect(fetchMock).toHaveBeenNthCalledWith(
+			2,
+			"https://edge.capture.page/v1/sessions/sess_123",
+			{
+				method: "DELETE",
+				headers: { Authorization: "Bearer dXNlcl8xMjM6c2VjcmV0" },
+			},
+		);
+	});
+
+	it("executes a generic action", async () => {
+		const fetchMock = vi.spyOn(globalThis, "fetch").mockResolvedValue({
+			ok: true,
+			status: 200,
+			json: async () => ({ success: true, url: "https://example.com" }),
+		} as Response);
+		const client = new Capture("user_123", "secret");
+
+		await client.executeAction("sess_123", "goto", {
+			url: "https://example.com",
+		});
+
+		expect(fetchMock).toHaveBeenCalledWith(
+			"https://edge.capture.page/v1/sessions/sess_123/actions",
+			{
+				method: "POST",
+				headers: {
+					Authorization: "Bearer dXNlcl8xMjM6c2VjcmV0",
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({
+					type: "goto",
+					payload: { url: "https://example.com" },
+				}),
+			},
+		);
+	});
+
+	it("throws a sessions error for non-2xx responses", async () => {
+		vi.spyOn(globalThis, "fetch").mockResolvedValue({
+			ok: false,
+			status: 404,
+			json: async () => ({ success: false, error: "Session not found" }),
+		} as Response);
+		const client = new Capture("user_123", "secret");
+
+		await expect(client.getSession("missing")).rejects.toMatchObject({
+			name: "CaptureSessionsError",
+			status: 404,
+			body: { success: false, error: "Session not found" },
+		} satisfies Partial<CaptureSessionsError>);
 	});
 });
