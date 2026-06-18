@@ -14,6 +14,7 @@ export type SessionOptions = {
 	maxTtlSeconds?: number;
 	proxy?: boolean;
 	bypassBotDetection?: boolean;
+	cdp?: boolean;
 };
 
 export type ActionPayload = Record<string, unknown>;

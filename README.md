@@ -113,3 +113,19 @@ const screenshot = await capture.sessions.action(sessionId, 'screenshot', {
 
 await capture.sessions.close(sessionId);
 ```
+
+### CDP Sessions
+
+```javascript
+import { Capture } from 'capture-node';
+
+const capture = new Capture(YOUR_API_KEY, YOUR_API_SECRET);
+
+const created = await capture.sessions.create({
+    maxTtlSeconds: 300,
+    cdp: true
+});
+const connectUrl = created.session.connectUrl;
+```
+
+CDP sessions cannot be combined with `proxy` or `bypassBotDetection`.

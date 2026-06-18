@@ -238,6 +238,47 @@ describe("Sessions API", () => {
 		);
 	});
 
+	it("creates a CDP session with cdp enabled", async () => {
+		const fetchMock = vi.spyOn(globalThis, "fetch").mockResolvedValue({
+			ok: true,
+			status: 201,
+			json: async () => ({
+				success: true,
+				session: {
+					id: "sess_cdp",
+					status: "active",
+					connectUrl: "wss://edge.capture.page/v1/sessions/sess_cdp/cdp",
+				},
+			}),
+		} as Response);
+		const client = new Capture("user_123", "secret");
+
+		const response = await client.sessions.create({
+			maxTtlSeconds: 300,
+			cdp: true,
+		});
+
+		expect(response).toEqual({
+			success: true,
+			session: {
+				id: "sess_cdp",
+				status: "active",
+				connectUrl: "wss://edge.capture.page/v1/sessions/sess_cdp/cdp",
+			},
+		});
+		expect(fetchMock).toHaveBeenCalledWith(
+			"https://edge.capture.page/v1/sessions",
+			{
+				method: "POST",
+				headers: {
+					Authorization: "Bearer dXNlcl8xMjM6c2VjcmV0",
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({ maxTtlSeconds: 300, cdp: true }),
+			},
+		);
+	});
+
 	it("gets and closes sessions", async () => {
 		const fetchMock = vi.spyOn(globalThis, "fetch").mockResolvedValue({
 			ok: true,
